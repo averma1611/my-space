@@ -862,8 +862,8 @@
     }
 
     const sx = mobile ? canvas.width * 0.50 : canvas.width * solarCurrentX;
-    // Shift centre slightly below mid so Saturn's rings clear the title bar at the top
-    const sy = mobile ? canvas.height * 0.30 : canvas.height * 0.53;
+    // Shift centre down so Saturn's rings clear the title bar (desktop and mobile)
+    const sy = mobile ? canvas.height * 0.38 : canvas.height * 0.53;
 
     // Available orbit radius — scales with sun position so system stays on screen
     const maxR = mobile
@@ -945,10 +945,11 @@
 
     // ── Always-visible small label ───────────────────────────────
     if (!hov) {
-      const smallSize = Math.max(7, Math.round(ps * 0.72));
+      const isMobile  = canvas.width < 768;
+      const smallSize = Math.max(isMobile ? 10 : 7, Math.round(ps * 0.72));
       ctx.font        = `${smallSize}px 'Orbitron', sans-serif`;
       const sw        = ctx.measureText(p.name).width;
-      ctx.globalAlpha = activePlanet === p ? 0.7 : 0.38;
+      ctx.globalAlpha = activePlanet === p ? 0.85 : (isMobile ? 0.65 : 0.38);
       ctx.fillStyle   = p.glow;
       ctx.fillText(p.name, cx - sw / 2, cy - ps - 6);
       ctx.globalAlpha = 1;
@@ -957,7 +958,7 @@
     // ── Hover: larger label + click hint ─────────────────────────
     if (hov) {
       const label    = p.name.toUpperCase();
-      const fontSize = Math.max(10, Math.round(ps * 1.1));
+      const fontSize = Math.max(canvas.width < 768 ? 13 : 10, Math.round(ps * 1.1));
       ctx.font       = `bold ${fontSize}px 'Orbitron', sans-serif`;
       const lw       = ctx.measureText(label).width;
       ctx.fillStyle  = p.glow;
